@@ -21,8 +21,12 @@
                     <tr>
                         <td>{{$subject->id}}</td>
                         <td>{{$subject->subject}}</td>
-                        <td></td>
-                        <td></td>
+                        <td>
+                            <button class="btn btn-info editButton" data-id="{{$subject->id}}" data-subject="{{$subject->subject}}" data-toggle="modal" data-target="#editSubjectModal">Edit</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger deleteButton" data-id="{{$subject->id}}"  data-toggle="modal" data-target="#deleteSubjectModal">Delete</button>
+                        </td>
                     </tr>
                 @endforeach
             @else
@@ -32,7 +36,7 @@
             @endif
         </tbody>
     </table>
-    <!-- Modal -->
+    <!-- Add Subject Modal -->
     <div class="modal fade" id="addSubjectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <form id="addSubject">
@@ -58,8 +62,61 @@
         </div>
     </div>
 
+     <!-- Edit Subject Modal -->
+     <div class="modal fade" id="editSubjectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Subject</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="editSubject">
+                    @csrf
+                    <div class="modal-body">
+                        <label for="">Subject:</label>
+                        <input type="text" name="subject" id="edit_subject" placeholder="Enter Subject Name" required>
+                        <input type="hidden" name="id" id="editSubjectId">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+     <!-- Delete Subject Modal -->
+     <div class="modal fade" id="deleteSubjectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Delete Subject</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="deleteSubject">
+                    @csrf
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete Subject?</p>
+                        <input type="hidden" name="id" id="deleteSubjectId">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function(){
+            //Add Subject
             $("#addSubject").submit(function(e){
                 e.preventDefault();
                 var formData=$(this).serialize();
@@ -77,6 +134,59 @@
                     }
                 });
             });
+
+            //Edit Subject
+            $(".editButton").click(function(){
+                var subject_id=$(this).attr('data-id');
+                var subject=$(this).attr('data-subject');
+                $("#edit_subject").val(subject);
+                $("#editSubjectId").val(subject_id);
+            });
+
+            //Update Subject
+            $("#editSubject").submit(function(e){
+                e.preventDefault();
+                var formData=$(this).serialize();
+                $.ajax({
+                    url:"{{route('editSubject')}}",
+                    type:"POST",
+                    data:formData,
+                    success:function(data){
+                        if (data.success == true) {
+                            location.reload();
+                        }
+                        else{
+                            alert(data.msg);
+                        }
+                    }
+                });
+            });
+
+            //Delete Subject
+            $(".deleteButton").click(function(){
+                var subject_id=$(this).attr('data-id');
+                $("#deleteSubjectId").val(subject_id);
+            });
+
+             //Update Subject
+             $("#deleteSubject").submit(function(e){
+                e.preventDefault();
+                var formData=$(this).serialize();
+                $.ajax({
+                    url:"{{route('deleteSubject')}}",
+                    type:"POST",
+                    data:formData,
+                    success:function(data){
+                        if (data.success == true) {
+                            location.reload();
+                        }
+                        else{
+                            alert(data.msg);
+                        }
+                    }
+                });
+            });
+
         });
     </script>
 @endsection

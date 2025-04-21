@@ -48,6 +48,8 @@ Route::group(['middleware'=>['web','checkAdmin']],function(){
 
     //Subject 
     Route::post('/add-subject',[AdminController::class,'addSubject'])->name('addSubject');
+    Route::post('/edit-subject',[AdminController::class,'editSubject'])->name('editSubject');
+    Route::post('/delete-subject',[AdminController::class,'deleteSubject'])->name('deleteSubject');
 });
 
 Route::group(['middleware'=>['web','checkStudent']],function(){
