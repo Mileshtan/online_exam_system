@@ -6,7 +6,36 @@
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addExamModal">
         Add Exam
     </button>
-
+    <table class="table">
+        <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">Exam Name</th>
+            <th scope="col">Subject</th>
+            <th scope="col">Date</th>
+            <th scope="col">Time</th>
+            </tr>
+        </thead>
+        <tbody>
+           @if(count($exams)>0)
+                @foreach($exams as $exam)
+                    <tr>
+                        <td>{{$exam->id}}</td>
+                        <td>{{$exam->exam_name}}</td>
+                        <td>{{$exam->subjects[0]['subject']}}</td>
+                        <td>{{$exam->date}}</td>
+                        <td>{{$exam->time}} Hrs</td>
+                    </tr>
+                @endforeach
+           @else
+                <tr>
+                    <td colspan="5">
+                        Exams not found
+                    </td>
+                </tr>
+           @endif
+        </tbody>
+    </table>
      <!-- Add Exam Modal -->
      <div class="modal fade" id="addExamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
