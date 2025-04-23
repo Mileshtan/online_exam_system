@@ -14,6 +14,7 @@
             <th scope="col">Subject</th>
             <th scope="col">Date</th>
             <th scope="col">Time</th>
+            <th scope="col">Edit</th>
             </tr>
         </thead>
         <tbody>
@@ -25,6 +26,9 @@
                         <td>{{$exam->subjects[0]['subject']}}</td>
                         <td>{{$exam->date}}</td>
                         <td>{{$exam->time}} Hrs</td>
+                        <td>
+                            <button class="btn btn-info editButton" data-id="{{$exam->id}}" data-toggle="modal" data-target="#editExamModal">Edit</button>
+                        </td>
                     </tr>
                 @endforeach
            @else
@@ -73,13 +77,100 @@
         </div>
     </div>
 
+    <!-- Edit Exam Modal -->
+    <div class="modal fade" id="editExamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Exam</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="editExam">
+                    @csrf
+                    <div class="modal-body">
+                        <input type="hidden" name="exam_id" id="exam_id">
+                        <input type="text" name="exam_name" id="edit_exam_name" placeholder="Enter Exam Name" class="w-100" required>
+                        <br><br>
+                        <select name="subject_id" id="edit_subject_id" class="w-100" required>
+                            <option value="">Select Subject</option>
+                            @if(count($subjects)>0)
+                                @foreach($subjects as $subject)
+                                    <option value="{{$subject->id}}">{{$subject->subject}}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                        <br><br>
+                        <input type="date" name="date" id="edit_date" class="w-100" required min="@php echo date('Y-m-d'); @endphp">
+                        <br><br>
+                        <input type="time" name="time" id="edit_time" class="w-100" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update Exam</button>
+                    </div>
+                </form>    
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function(){
+            //Add Exam
            $("#addExam").submit(function(e){ 
                 e.preventDefault();
                 var formData=$(this).serialize();
                 $.ajax({
                     url:"{{route('addExam')}}",
+                    type:"POST",
+                    data:formData,
+                    success:function(data){
+                        if (data.success == true) {
+                            
+                            location.reload();
+                        }
+                        else{
+                            alert(data.msg);
+                        }
+                    }
+                });
+           });
+
+           //Edit Exam
+           $(".editButton").click(function(){
+                var id=$(this).attr('data-id');
+                $("#exam_id").val(id);
+
+                var url='{{route("getExamDetail","id")}}';
+                url=url.replace('id',id);
+
+                $.ajax({
+                    url:url,
+                    type:"GET",
+                    success:function(data){
+                        if (data.success==true) {
+
+                            var exam=data.data;
+                            $("#edit_exam_name").val(exam[0].exam_name);
+                            $("#edit_subject_id").val(exam[0].subject_id);
+                            $("#edit_date").val(exam[0].date);
+                            $("#edit_time").val(exam[0].time);
+
+                        } else {  
+                            console.log("error");  
+                            alert(data.msg);
+                        }
+                    }
+                });
+           });
+
+           $("#editExam").submit(function(e){ 
+            console.log("ok");
+                e.preventDefault();
+                var formData=$(this).serialize();
+                $.ajax({
+                    url:"{{route('updateExam')}}",
                     type:"POST",
                     data:formData,
                     success:function(data){

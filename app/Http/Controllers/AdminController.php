@@ -79,4 +79,30 @@ class AdminController extends Controller
         }
     }
 
+    //Edit Exam
+    public function getExamDetail($id)
+    {
+        try {
+            $exam=Exam::where('id',$id)->get();
+            return response()->json(['success'=>true,'data'=>$exam]);
+        } catch (\Exception $e) {
+            return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
+        }
+    }
+
+    public function updateExam(Request $request)
+    {
+        try {
+            $exam=Exam::find($request->exam_id);
+            $exam->exam_name=$request->exam_name;
+            $exam->subject_id=$request->subject_id;
+            $exam->date=$request->date;
+            $exam->time=$request->time;
+            $exam->save();
+            return response()->json(['success'=>true,'msg'=>'Exam Updated Successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
+        }
+    }
+
 }
