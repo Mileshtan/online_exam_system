@@ -14,6 +14,7 @@
             <th scope="col">Subject</th>
             <th scope="col">Date</th>
             <th scope="col">Time</th>
+            <th scope="col">Attempt</th>
             <th scope="col">Edit</th>
             <th scope="col">Delete</th>
             </tr>
@@ -27,6 +28,7 @@
                         <td>{{$exam->subjects[0]['subject']}}</td>
                         <td>{{$exam->date}}</td>
                         <td>{{$exam->time}} Hrs</td>
+                        <td>{{$exam->attempt}} Time</td>
                         <td>
                             <button class="btn btn-info editButton" data-id="{{$exam->id}}" data-toggle="modal" data-target="#editExamModal">Edit</button>
                         </td>
@@ -71,6 +73,8 @@
                         <input type="date" name="date" id="date" class="w-100" required min="@php echo date('Y-m-d'); @endphp">
                         <br><br>
                         <input type="time" name="time" id="time" class="w-100" required>
+                        <br><br>
+                        <input type="number" name="attempt" id="attempt" required placeholder="Enter exam attempt time" class="w-100" min="1">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -109,6 +113,8 @@
                         <input type="date" name="date" id="edit_date" class="w-100" required min="@php echo date('Y-m-d'); @endphp">
                         <br><br>
                         <input type="time" name="time" id="edit_time" class="w-100" required>
+                        <br><br>
+                        <input type="number" name="attempt" id="edit_attempt" required placeholder="Enter exam attempt time" class="w-100" min="1">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -186,6 +192,7 @@
                             $("#edit_subject_id").val(exam[0].subject_id);
                             $("#edit_date").val(exam[0].date);
                             $("#edit_time").val(exam[0].time);
+                            $("#edit_attempt").val(exam[0].attempt);
 
                         } else {  
                             console.log("error");  

@@ -71,7 +71,8 @@ class AdminController extends Controller
                 'exam_name'=>$request->exam_name,
                 'subject_id'=>$request->subject_id,
                 'date'=>$request->date,
-                'time'=>$request->time
+                'time'=>$request->time,
+                'attempt'=>$request->attempt
             ]);
             return response()->json(['success'=>true,'msg'=>'Exam added successfully']);
         } catch (\Exception $e) {
@@ -99,6 +100,7 @@ class AdminController extends Controller
             $exam->subject_id=$request->subject_id;
             $exam->date=$request->date;
             $exam->time=$request->time;
+            $exam->attempt=$request->attempt;
             $exam->save();
             return response()->json(['success'=>true,'msg'=>'Exam Updated Successfully']);
         } catch (\Exception $e) {
