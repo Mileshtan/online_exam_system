@@ -15,6 +15,7 @@
             <th scope="col">Date</th>
             <th scope="col">Time</th>
             <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -28,6 +29,9 @@
                         <td>{{$exam->time}} Hrs</td>
                         <td>
                             <button class="btn btn-info editButton" data-id="{{$exam->id}}" data-toggle="modal" data-target="#editExamModal">Edit</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger deleteButton" data-id="{{$exam->id}}" data-toggle="modal" data-target="#deleteExamModal">Delete</button>
                         </td>
                     </tr>
                 @endforeach
@@ -115,6 +119,32 @@
         </div>
     </div>
 
+
+    <!-- Delete Exam Modal -->
+    <div class="modal fade" id="deleteExamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Delete Exam</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="deleteExam">
+                    @csrf
+                    <div class="modal-body">
+                        <input type="hidden" name="exam_id" id="deleteExamId">
+                        <p>Are you sure you want to delete exam?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Delete Exam</button>
+                    </div>
+                </form>    
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function(){
             //Add Exam
@@ -166,11 +196,37 @@
            });
 
            $("#editExam").submit(function(e){ 
-            console.log("ok");
+            // console.log("ok");
                 e.preventDefault();
                 var formData=$(this).serialize();
                 $.ajax({
                     url:"{{route('updateExam')}}",
+                    type:"POST",
+                    data:formData,
+                    success:function(data){
+                        if (data.success == true) {
+                            
+                            location.reload();
+                        }
+                        else{
+                            alert(data.msg);
+                        }
+                    }
+                });
+           });
+
+           //Delete Exam
+           $(".deleteButton").click(function(){
+                var id=$(this).attr('data-id');
+                $("#deleteExamId").val(id);
+           });
+
+           $("#deleteExam").submit(function(e){ 
+            // console.log("ok");
+                e.preventDefault();
+                var formData=$(this).serialize();
+                $.ajax({
+                    url:"{{route('deleteExam')}}",
                     type:"POST",
                     data:formData,
                     success:function(data){

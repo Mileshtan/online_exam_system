@@ -90,6 +90,7 @@ class AdminController extends Controller
         }
     }
 
+    //Update Exam
     public function updateExam(Request $request)
     {
         try {
@@ -100,6 +101,18 @@ class AdminController extends Controller
             $exam->time=$request->time;
             $exam->save();
             return response()->json(['success'=>true,'msg'=>'Exam Updated Successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
+        }
+    }
+
+    //Delete Exam
+    public function deleteExam(Request $request)
+    {
+        try {
+            Exam::where('id',$request->exam_id)->delete();
+            
+            return response()->json(['success'=>true,'msg'=>'Exam deleted Successfully']);
         } catch (\Exception $e) {
             return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
         }
