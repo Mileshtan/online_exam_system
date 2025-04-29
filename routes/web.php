@@ -61,6 +61,7 @@ Route::group(['middleware'=>['web','checkAdmin']],function(){
     //Q&A
     Route::get('/admin/qna-ans',[AdminController::class,'qnaDashboard']);
     Route::post('/add-qna-ans',[AdminController::class,'addQna'])->name('addQna'); 
+    Route::get('/get-qna-details',[AdminController::class,'getQnaDetails'])->name('getQnaDetails');
 
 });
 
