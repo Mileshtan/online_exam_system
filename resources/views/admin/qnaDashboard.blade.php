@@ -158,7 +158,7 @@
                         type:"POST",
                         data:formData,
                         success:function(data){
-                            console.log(data);
+                            // console.log(data);
                             if (data.success == true) {
                                 location.reload();
                             }
@@ -265,7 +265,7 @@
                 type:"GET",
                 data:{qid:qid},
                 success:function(data){
-                    console.log(data);
+                    // console.log(data);
                     var qna=data.data[0];
                     $("#question_id").val(qna['id']);
                     $("#edit_question").val(qna['question']);
@@ -285,7 +285,7 @@
                                     <input type="text" name="answers[`+qna['answers'][i]['id']+`]" required 
                                     class="w-100" placeholder="Enter Answer" value="`+qna['answers'][i]['answer']+`">
                                 </div>
-                                <button class="btn btn-danger removeButton">Remove</button>
+                                <button class="btn btn-danger removeButton removeAnswer" data-id="`+qna['answers'][i]['id']+`">Remove</button>
                             </div>
                         `;
                     }
@@ -316,8 +316,21 @@
                     }
                 }
                 if (checkIsCorrect) {
-                    
                     var formData=$(this).serialize();
+                    $.ajax({
+                        url:"{{route('updateQna')}}",
+                        type:"POST",
+                        data:formData,
+                        success:function(data){
+                            // console.log(data);
+                            if (data.success == true) {
+                                location.reload();
+                            }
+                            else{
+                                alert("data.msg");
+                            }
+                        }
+                    });
 
                 } else {
                     $(".editError").text("Please select any correct answer.")
@@ -326,6 +339,25 @@
                     },2000);
                 }
             }
+        });
+
+        //remove answers
+        $(document).on('click','.removeAnswer',function(){
+            var ansId=$(this).attr('data-id');
+            $.ajax({
+                url:"{{route('deleteAns')}}",
+                type:"GET",
+                data:{id:ansId},
+                success:function(data){
+                    if (data.success == true) {
+                        // console.log(data.msg);
+                    }
+                    else{
+                        alert("data.msg");
+                    }
+                }
+            });
+
         });
     });
 </script>
