@@ -220,4 +220,11 @@ class AdminController extends Controller
         }
     }
 
+    public function deleteQna(Request $request)
+    {
+        Question::where('id',$request->id)->delete();
+        Answer::where('question_id',$request->id)->delete();
+        return response()->json(['success'=>true,'msg'=>'Qna deleted successfully!']);
+    }
+
 }

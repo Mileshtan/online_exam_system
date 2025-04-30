@@ -13,6 +13,7 @@
                 <th scope="col">Question</th>
                 <th scope="col">Answer</th>
                 <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -26,6 +27,9 @@
                     </td>
                     <td>
                         <button class="btn btn-info editButton" data-id="{{$question->id}}" data-toggle="modal" data-target="#editQnaModal">Edit</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger deleteButton" data-id="{{$question->id}}" data-toggle="modal" data-target="#deleteQnaModal">Delete</button>
                     </td>
                 </tr>
                 @endforeach
@@ -100,37 +104,63 @@
         </div>
     </div>
 
-         <!-- Edit Q and A Modal -->
-         <div class="modal fade" id="editQnaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Q&A</h5>
-                    <button id="addEditAnswer" class="ml-5 btn btn-info">Add Answer</button>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form method="post" id="editQna">
-                    @csrf
-                    <div class="modal-body editModalAnswers">
-                        <div class="row answers">
-                            <div class="col">
-                                <input type="hidden" name="question_id" id="question_id">
-                                <input type="text" id="edit_question" name="edit_question" class="w-100" placeholder="Enter Exam" required>
+        <!-- Edit Q and A Modal -->
+        <div class="modal fade" id="editQnaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Edit Q&A</h5>
+                        <button id="addEditAnswer" class="ml-5 btn btn-info">Add Answer</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post" id="editQna">
+                        @csrf
+                        <div class="modal-body editModalAnswers">
+                            <div class="row answers">
+                                <div class="col">
+                                    <input type="hidden" name="question_id" id="question_id">
+                                    <input type="text" id="edit_question" name="edit_question" class="w-100" placeholder="Enter Exam" required>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <span class="editError" style="color:red;"></span>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update Q&A</button>
-                    </div> 
-                </form>
-                
+                        <div class="modal-footer">
+                            <span class="editError" style="color:red;"></span>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Update Q&A</button>
+                        </div> 
+                    </form>
+                    
+                </div>
             </div>
         </div>
-    </div>
+
+
+         <!-- Delete Q and A Modal -->
+            <div class="modal fade" id="deleteQnaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Delete Exam</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form id="deleteQna">
+                            @csrf
+                            <div class="modal-body">
+                                <input type="hidden" name="id" id="delete_qna_id">
+                                <p>Are you sure you want to delete Question and Answer?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Delete Exam</button>
+                            </div>
+                        </form>    
+                    </div>
+                </div>
+            </div>
 
     <script>
     $(document).ready(function(){
@@ -358,6 +388,30 @@
                 }
             });
 
+        });
+
+        //delete QnA
+        $('.deleteButton').click(function(){
+            var id=$(this).attr('data-id');
+            $('#delete_qna_id').val(id);
+        });
+
+        $('#deleteQna').submit(function(e){
+            e.preventDefault();
+            var formData=$(this).serialize();
+            $.ajax({
+                url:"{{route('deleteQna')}}",
+                type:"POST",
+                data:formData,
+                success:function(data){
+                    if (data.success == true) {
+                        location.reload();
+                    }
+                    else{
+                        alert(data.msg);
+                    }
+                }
+            });
         });
     });
 </script>
