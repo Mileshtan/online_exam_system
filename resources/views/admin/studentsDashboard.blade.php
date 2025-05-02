@@ -3,6 +3,9 @@
 @section('space-work')
     <h2>Students</h2>
     <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addStudentModal">
+        Add Student
+    </button>
     <table class="table">
         <thead>
             <tr>
@@ -29,5 +32,68 @@
             @endif
         </tbody>
     </table>
+
+     <!-- Add Student Modal -->
+     <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add Student</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" id="addStudent">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" id="name" name="name" class="w-100" placeholder="Enter Student Name" required>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <input type="email" id="email" name="email" class="w-100" placeholder="Enter Student Email" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Student</button>
+                    </div> 
+                </form>
+                
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $("#addStudent").submit(function(e){
+                e.preventDefault();
+                var formData=$(this).serialize();
+
+                $.ajax({
+                    url:"{{route('addStudent')}}",
+                    type:"POST",
+                    data:formData,
+                    success:function(data){
+                        if (data.success == true) {
+                            location.reload();
+                        } else {
+                            alert(data.msg);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // console.error("AJAX Error:", xhr.responseText);
+                        alert("Something went wrong. See console for details.");
+                    }
+                });
+
+
+
+            });
+        });
+    </script>
 
 @endsection
