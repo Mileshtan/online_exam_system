@@ -68,7 +68,8 @@ Route::group(['middleware'=>['web','checkAdmin']],function(){
     Route::post('/delete-qna-ans',[AdminController::class,'deleteQna'])->name('deleteQna'); 
     Route::post('/import-qna-ans',[AdminController::class,'importQna'])->name('importQna'); 
 
-
+    //Students
+    Route::get('/admin/students',[AdminController::class,'studentsDashboard']);
 
 });
 

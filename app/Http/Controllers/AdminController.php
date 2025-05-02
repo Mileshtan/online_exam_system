@@ -7,6 +7,7 @@ use App\Models\Subject;
 use App\Models\Exam;
 use App\Models\Question;
 use App\Models\Answer;
+use App\Models\User;
 use App\Imports\QnaImport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -236,6 +237,12 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
         }
+    }
+
+    //Student dashboard
+    public function studentsDashboard(){
+        $students=User::where('is_admin',0)->get();
+        return view('admin.studentsDashboard',compact('students'));
     }
 
 }
