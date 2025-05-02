@@ -7,6 +7,8 @@ use App\Models\Subject;
 use App\Models\Exam;
 use App\Models\Question;
 use App\Models\Answer;
+use App\Imports\QnaImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
 {
@@ -225,6 +227,15 @@ class AdminController extends Controller
         Question::where('id',$request->id)->delete();
         Answer::where('question_id',$request->id)->delete();
         return response()->json(['success'=>true,'msg'=>'Qna deleted successfully!']);
+    }
+
+    public function importQna(Request $request){
+        try {
+            Excel::import(new QnaImport,$request->file('file'));
+            return response()->json(['success'=>true,'msg'=>'Import Q&a successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
+        }
     }
 
 }
