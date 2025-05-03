@@ -279,5 +279,34 @@ class AdminController extends Controller
         }
     }
 
+    //Update Student
+    public function editStudent(Request $request)
+    {
+        try {
+            
+           $user=User::find($request->id);
+
+           $user->name=$request->edit_name;
+           $user->email=$request->edit_email;
+           $user->save();
+            
+            $url=URL::to('/');
+
+            $data['url']=$url;
+            $data['name']=$request->edit_name;
+            $data['email']=$request->edit_email;
+
+            $data['title']="Student Profile Updated on Online Examination System";
+
+            Mail::send('updateProfileMail',['data'=>$data],function($message) use($data){
+                $message->to($data['email'])->subject($data['title']);
+            });
+            return response()->json(['success'=>true,'msg'=>'Student Updated successfully']);
+
+        } catch (\Exception $e) {
+            return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
+        }
+    }
+
 
 }
