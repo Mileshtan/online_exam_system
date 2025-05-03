@@ -7,6 +7,7 @@ use App\Models\Subject;
 use App\Models\Exam;
 use App\Models\Question;
 use App\Models\Answer;
+use App\Models\QnaExam;
 use App\Models\User;
 use App\Imports\QnaImport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -314,6 +315,52 @@ class AdminController extends Controller
         try {
             User::where('id',$request->student_id)->delete();
             return response()->json(['success'=>true,'msg'=>'Student deleted successfully!']);
+
+        } catch (\Exception $e) {
+            return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
+        }
+    }
+
+    //Get question in exam
+    public function getQuestions(Request $request){
+        try {
+           
+            $questions=Question::all();
+            if (count($questions)>0) {
+                $data=[];
+                $counter=0;
+                foreach($questions as $question)
+                {
+                    $qnaExam=QnaExam::where(['exam_id'=>$request->exam_id,'question_id'=>$question->id])->get();
+                    if (count($qnaExam)==0) {
+                        $data[$counter]['id']=$question->id;
+                        $data[$counter]['questions']=$question->question;
+                        $counter++;
+                    }
+                }
+                return response()->json(['success'=>true,'msg'=>'Question data','data'=>$data]);
+            }
+            else {
+                return response()->json(['success'=>false,'msg'=>'Questions not found']);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
+        }
+    }
+
+    public function addQuestions(Request $request)
+    {
+        try {
+            
+            if (isset($request->questions_ids)) {
+                foreach ($request->questions_ids as $qid) {
+                    QnaExam::insert([
+                        'exam_id'=>$request->exam_id,
+                        'question_id'=>$qid
+                    ]);
+                }
+            }
+            return response()->json(['success'=>true,'msg'=>'Questions added succesfully']);
 
         } catch (\Exception $e) {
             return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
