@@ -13,7 +13,7 @@
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Edit</th> 
-                <!-- <th scope="col">Delete</th> -->
+                <th scope="col">Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -26,6 +26,11 @@
                     <td>
                         <button type="button" class="btn btn-info editButton" data-id="{{$student->id}}" data-name="{{$student->name}}" data-email="{{$student->email}}" data-toggle="modal" data-target="#editStudentModal">
                             Edit
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger deleteButton" data-id="{{$student->id}}" data-toggle="modal" data-target="#deleteStudentModal">
+                            Delete
                         </button>
                     </td>
                 </tr>
@@ -75,7 +80,7 @@
 
 
       <!-- Edit Student Modal -->
-      <div class="modal fade" id="editStudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="editStudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -102,6 +107,33 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary updateButton">Update Student</button>
+                    </div> 
+                </form>
+                
+            </div>
+        </div>
+    </div>
+
+
+      <!-- Delete Student Modal -->
+      <div class="modal fade" id="deleteStudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Delete Student</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" id="deleteStudent">
+                    @csrf
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this student?</p>
+                        <input type="hidden" name="student_id" id="student_id">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Delete Student</button>
                     </div> 
                 </form>
                 
@@ -156,6 +188,36 @@
 
                 $.ajax({
                     url:"{{route('editStudent')}}",
+                    type:"POST",
+                    data:formData,
+                    success:function(data){
+                        if (data.success == true) {
+                            location.reload();
+                        } else {
+                            alert(data.msg);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // console.error("AJAX Error:", xhr.responseText);
+                        alert("Something went wrong. See console for details.");
+                    }
+                });
+            });
+
+            //Delete Student
+            $(".deleteButton").click(function(){
+                var id=$(this).attr('data-id');
+                $("#student_id").val(id);
+
+            });
+
+            $("#deleteStudent").submit(function(e){
+                e.preventDefault();
+                console.log("delete");
+                var formData=$(this).serialize();
+
+                $.ajax({
+                    url:"{{route('deleteStudent')}}",
                     type:"POST",
                     data:formData,
                     success:function(data){

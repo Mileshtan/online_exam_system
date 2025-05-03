@@ -308,5 +308,17 @@ class AdminController extends Controller
         }
     }
 
+    //Delete Student
+    public function deleteStudent(Request $request)
+    {
+        try {
+            User::where('id',$request->student_id)->delete();
+            return response()->json(['success'=>true,'msg'=>'Student deleted successfully!']);
+
+        } catch (\Exception $e) {
+            return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
+        }
+    }
+
 
 }
