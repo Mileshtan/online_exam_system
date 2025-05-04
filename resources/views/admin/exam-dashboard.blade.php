@@ -16,6 +16,7 @@
             <th scope="col">Time</th>
             <th scope="col">Attempt</th>
             <th scope="col">Add Question</th>
+            <th scope="col">Show Questions</th>
             <th scope="col">Edit</th>
             <th scope="col">Delete</th>
             </tr>
@@ -32,6 +33,9 @@
                         <td>{{$exam->attempt}} Time</td>
                         <td>
                             <a href="#" class="addQuestion" data-id="{{$exam->id}}" data-toggle="modal" data-target="#addQnamModal">Add Question</a>
+                        </td>
+                        <td>
+                            <a href="#" class="seeQuestion" data-id="{{$exam->id}}" data-toggle="modal" data-target="#seeQnamModal">View Question</a>
                         </td>
                         <td>
                             <button class="btn btn-info editButton" data-id="{{$exam->id}}" data-toggle="modal" data-target="#editExamModal">Edit</button>
@@ -195,6 +199,36 @@
         </div>
     </div>
 
+
+      <!-- View Qna Modal -->
+      <div class="modal fade" id="seeQnamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Question</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                            <th>S.N</th>
+                            <th>Question</th>
+                        </thead>
+                        <tbody class="seeQuestionTable">
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+ 
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function(){
             //Add Exam
@@ -350,6 +384,42 @@
                         else{
                             alert(data.msg);
                         }
+                    }
+                });
+           });
+
+           //View Question
+           $('.seeQuestion').click(function(){
+                var id=$(this).attr('data-id');
+                $.ajax({
+                    url:"{{route('getExamQuestions')}}",
+                    type:"GET",
+                    data:{exam_id:id},
+                    success:function(data){
+                        // console.log(data);
+                        var html=``;
+                        var questions=data.data;
+                        if (questions.length>0) {
+                            
+                            for(let i=0;i<questions.length;i++)
+                            {
+                                html +=`
+                                    <tr>
+                                        <td>`+(i+1)+`</td>
+                                        <td>`+questions[i]['question'][0]['question']+`</td>
+                                    </tr>
+                                `;
+                            }
+
+                        }
+                        else{
+                            html +=`
+                                <tr>
+                                    <td colspan="1">Question not found</td>
+                                </tr>
+                            `;
+                        }
+                        $('.seeQuestionTable').html(html);
                     }
                 });
            });
