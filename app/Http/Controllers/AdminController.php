@@ -77,12 +77,14 @@ class AdminController extends Controller
     public function addExam(Request $request)
     {
         try {
+            $unique_id=uniqid('exid');
             Exam::insert([
                 'exam_name'=>$request->exam_name,
                 'subject_id'=>$request->subject_id,
                 'date'=>$request->date,
                 'time'=>$request->time,
-                'attempt'=>$request->attempt
+                'attempt'=>$request->attempt,
+                'entrance_id'=>$unique_id
             ]);
             return response()->json(['success'=>true,'msg'=>'Exam added successfully']);
         } catch (\Exception $e) {
