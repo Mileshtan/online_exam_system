@@ -6,10 +6,11 @@
     <div class="container">
         <p style="color:black;">Welcome, {{Auth::user()->name}}</p>
         <h1 class="text-center">{{$exam[0]['exam_name']}}</h1>
-        <h4 class="text-right time">{{$exam[0]['time']}}</h4>
+        <!-- <h4 class="text-right time">{{$exam[0]['time']}}</h4> -->
         @php $qcount=1; @endphp
         @if($success == true)
             @if(count($qna)>0)
+                <h4 class="text-right time">{{$exam[0]['time']}}</h4>
                 <form action="{{route('examSubmit')}}" method="post" class="mb-5" id="exam_form">
                     @csrf
                     <input type="hidden" name="exam_id" id="exam_id" value="{{$exam[0]['id']}}">

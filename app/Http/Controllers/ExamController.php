@@ -16,8 +16,11 @@ class ExamController extends Controller
     {
         $qnaExam=Exam::where('entrance_id',$id)->with('getQnaExam')->get();
         if (count($qnaExam)>0) {
-            
-            if ($qnaExam[0]['date'] == date('Y-m-d')) {
+            $attemptCount=ExamAttempt::where(['exam_id'=>$qnaExam[0]['id'],'user_id'=>auth()->user()->id])->count();
+            if ($attemptCount >= $qnaExam[0]['attempt']) {
+                return view('student.exam-dashboard',['success'=>false,'msg'=>'Your exam attempt quota has finished ','exam'=>$qnaExam]);
+            }
+            elseif ($qnaExam[0]['date'] == date('Y-m-d')) {
                 if (count($qnaExam[0]['getQnaExam'])>0) {
                     $qna=QnaExam::where('exam_id',$qnaExam[0]['id'])->with('question','answers')->inRandomOrder()->get();
                     return view('student.exam-dashboard',['success'=>true,'exam'=>$qnaExam,'qna'=>$qna]);
