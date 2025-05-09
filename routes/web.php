@@ -86,6 +86,9 @@ Route::group(['middleware'=>['web','checkAdmin']],function(){
     //Delete Question in exam
     Route::get('/delete-exam-questions',[AdminController::class,'deleteExamQuestions'])->name('deleteExamQuestions');
 
+    //Marks
+    Route::get('/admin/marks',[AdminController::class,'loadMarks']);
+
 
 });
 

@@ -36,6 +36,9 @@
             <a href="/admin/exam"><span class="fa fa-tasks mr-3"></span> Exams</a>
           </li>
           <li class="active">
+            <a href="/admin/marks"><span class="fa fa-check mr-3"></span> Marks</a>
+          </li>
+          <li class="active">
             <a href="/admin/qna-ans"><span class="fa fa-question-circle mr-3"></span> Q&A</a>
           </li>
           <li class="active">
