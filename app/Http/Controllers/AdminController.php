@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Subject;
 use App\Models\Exam;
+use App\Models\ExamAttempt;
 use App\Models\Question;
 use App\Models\Answer;
 use App\Models\QnaExam;
@@ -411,6 +412,13 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
         }
+    }
+
+    public function reviewExams()
+    {
+        $attempts=ExamAttempt::with(['user','exam'])->orderBy('id')->get();
+
+        return view('admin.review-exams',compact('attempts'));
     }
 
 
