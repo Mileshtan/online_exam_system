@@ -70,6 +70,28 @@
         </div>
     </div>
 
+    <!-- Question Explanation -->
+     <div class="modal fade" id="explanationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Explanation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="explanation"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function(){
 
@@ -103,7 +125,14 @@
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <h6>Q(`+(i+1)+`).`+data[i]['question']['question']+`</h6>
-                                                <p>Ans:- `+answer+`.  `+is_correct+`</p>
+                                                <p>Ans:- `+answer+`.  `+is_correct+`</p>`;
+                                    
+
+                                    if (data[i]['question']['explanation']!=null) {
+                                        html +=`<p><a href="#" class="explanation" data-explanation="`+data[i]['question']['explanation']+`"  data-toggle="modal" data-target="#explanationModal">Check Explanation</a></p>`
+                                    }            
+                                    html +=`
+
                                             </div>
                                         </div>
                                     
@@ -124,6 +153,11 @@
                     }
                 });
 
+            });
+
+            $(document).on('click','.explanation',function(){
+                var explanation=$(this).attr('data-explanation');
+                $('#explanation').text(explanation);
             });
 
         });
