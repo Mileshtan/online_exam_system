@@ -71,4 +71,15 @@ class ExamController extends Controller
         $attempts=ExamAttempt::where('user_id',Auth()->user()->id)->with('exam')->orderby('updated_at')->get();
         return view('student.results',compact('attempts'));
     }
+
+    //Exam result view to student
+    public function reviewQna(Request $request)
+    {
+        try {
+            $attemptData=ExamAnswer::where('attempt_id',$request->attempt_id)->with(['question','answers'])->get();
+            return response()->json(['success'=>true,'msg'=>'Qna Data','data'=> $attemptData]);
+        } catch (\Exception $e) {
+            return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
+        }
+    }
 }
