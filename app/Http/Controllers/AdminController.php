@@ -12,6 +12,7 @@ use App\Models\Answer;
 use App\Models\QnaExam;
 use App\Models\User;
 use App\Imports\QnaImport;
+use App\Exports\ExportStudent;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Hash;
 use Mail;
@@ -336,6 +337,12 @@ class AdminController extends Controller
         }
     }
 
+    //Export Student
+    public function exportStudents()
+    {
+        return Excel::download(new ExportStudent,'students.xlsx');
+    }
+
     //Get question in exam
     public function getQuestions(Request $request){
         try {
@@ -493,6 +500,8 @@ class AdminController extends Controller
             return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
         }
     }
+
+    
 
 
 }

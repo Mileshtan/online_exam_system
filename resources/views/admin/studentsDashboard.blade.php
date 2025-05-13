@@ -6,6 +6,9 @@
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addStudentModal">
         Add Student
     </button>
+
+    <a href="{{route('exportStudents')}}" class="btn btn-warning">Export Student</a>
+
     <table class="table">
         <thead>
             <tr>
