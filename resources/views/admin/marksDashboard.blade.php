@@ -9,6 +9,7 @@
                 <th scope="col">Exam Name</th>
                 <th scope="col">Marks/Q</th>
                 <th scope="col">Total Marks</th> 
+                <th scope="col">Passing Marks</th>
                 <th scope="col">Edit</th>
             </tr>
         </thead>
@@ -23,8 +24,9 @@
                         <td>{{$exam->exam_name}}</td>
                         <td>{{$exam->marks}}</td>
                         <td>{{count($exam->getQnaExam) * $exam->marks}}</td>
+                        <td>{{$exam->pass_marks}}</td>
                         <td>
-                            <button class="btn btn-primary editMarks" data-toggle="modal" data-target="#editMarksModal" data-id="{{$exam->id}}" data-marks="{{$exam->marks}}" data-totalq="{{count($exam->getQnaExam)}}">Edit</button>
+                            <button class="btn btn-primary editMarks" data-toggle="modal" data-target="#editMarksModal" data-id="{{$exam->id}}" data-marks="{{$exam->marks}}" data-totalq="{{count($exam->getQnaExam)}}" data-pass-marks="{{$exam->pass_marks}}">Edit</button>
                         </td>
                     </tr>
                 @endforeach
@@ -52,8 +54,8 @@
                     @csrf
                     <div class="modal-body">
                        
-                        <div class="row">
-                            <div class="col-sm-3">
+                        <div class="row mt-2">
+                            <div class="col-sm-4">
                                 <label for="">Marks/Q</label>
                             </div>
                             <div class="col-sm-6">
@@ -62,12 +64,21 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-sm-3">
+                        <div class="row mt-2">
+                            <div class="col-sm-4">
                                 <label for="">Total Marks</label>
                             </div>
                             <div class="col-sm-6">
                                 <input type="text" id="tmarks" disabled placeholder="Total Marks">
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-sm-4">
+                                <label for="">Pass Marks</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" onkeypress="return event.charCode>=48 && event.charCode<=57 ||event.charCode ==46" name="pass_marks" id="pass_marks" placeholder="Enter Pass Marks per Question">
                             </div>
                         </div>
                        
@@ -97,6 +108,8 @@
                 $('#tmarks').val((examMarks * totalQ).toFixed(1));
 
                 totalQna=totalQ;
+
+                $('#pass_marks').val($(this).attr('data-pass-marks'));
             });
 
             $('#marks').keyup(function(){
@@ -105,8 +118,36 @@
 
             });
 
+            $('#pass_marks').keyup(function(){
+
+                $('.pass-error').remove();
+                var tmarks=$('#tmarks').val();
+                var pmarks=$(this).val();
+
+                if (parseFloat(pmarks) >= parseFloat(tmarks)) {
+                    $(this).parent().append('<p style="color:red;" class="pass-error">Pass Marks cannot be greater than total marks!</p>');
+                    setTimeout(() => {
+                        $('.pass-error').remove();
+                    }, 2000);
+                }
+            });
+
             $('#editMarks').submit(function(){
                 event.preventDefault();
+                $('.pass-error').remove();
+                var tmarks=$('#tmarks').val();
+                var pmarks=$('#pass_marks').val();
+
+                if (parseFloat(pmarks) >= parseFloat(tmarks)) {
+                    $('#pass_marks').parent().append('<p style="color:red;" class="pass-error">Pass Marks cannot be greater than total marks!</p>');
+                    setTimeout(() => {
+                        $('.pass-error').remove();
+                    }, 2000);
+
+                    return false;
+                }
+
+
 
                 var formData=$(this).serialize();
                 $.ajax({
