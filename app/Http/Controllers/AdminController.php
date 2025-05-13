@@ -440,7 +440,7 @@ class AdminController extends Controller
         
             $attemptId=$request->attempt_id;
 
-            $examData=ExamAttempt::where('id',$attemptId)->with('exam')->get();
+            $examData=ExamAttempt::where('id',$attemptId)->with(['exam','user'])->get();
 
             $marks=$examData[0]['exam']['marks'];
 
@@ -463,6 +463,18 @@ class AdminController extends Controller
                 'status'=>1,
                 'marks'=>$totalMarks
             ]);
+
+            $url=URL::to('/');
+            $data['url']=$url.'/results';
+            $data['name'] = $examData[0]['user']['name'];
+            $data['email'] = $examData[0]['user']['email'];
+            $data['exam_name'] = $examData[0]['exam']['exam_name'];
+            $data['title'] = $examData[0]['exam']['exam_name']. ' Result';
+
+            Mail::send('result-mail',['data'=>$data],function($message) use ($data){
+                $message->to($data['email'])->subject($data['title']); 
+            });
+
             return response()->json(['success'=>true,'msg'=>'Approved Successfully']);
 
         } catch (\Exception $e) {
