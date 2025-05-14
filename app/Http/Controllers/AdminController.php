@@ -117,12 +117,21 @@ class AdminController extends Controller
     public function updateExam(Request $request)
     {
         try {
+
+
+            $plan=$request->edit_plan;
+            $prices=null;
+            if (isset($request->edit_inr) && isset($request->edit_usd)) {
+                $prices=json_encode(['INR'=>$request->edit_inr,'USD'=>$request->edit_usd]);
+            }
             $exam=Exam::find($request->exam_id);
             $exam->exam_name=$request->exam_name;
             $exam->subject_id=$request->subject_id;
             $exam->date=$request->date;
             $exam->time=$request->time;
             $exam->attempt=$request->attempt;
+            $exam->plan=$plan;
+            $exam->prices=$prices;
             $exam->save();
             return response()->json(['success'=>true,'msg'=>'Exam Updated Successfully']);
         } catch (\Exception $e) {
