@@ -15,6 +15,8 @@
             <th scope="col">Date</th>
             <th scope="col">Time</th>
             <th scope="col">Attempt</th>
+            <th scope="col">Plan</th>
+            <th scope="col">Prices</th>
             <th scope="col">Add Question</th>
             <th scope="col">Show Questions</th>
             <th scope="col">Edit</th>
@@ -31,6 +33,23 @@
                         <td>{{$exam->date}}</td>
                         <td>{{$exam->time}} Hrs</td>
                         <td>{{$exam->attempt}} Time</td>
+                        <td>
+                            @if($exam->plan !=0)
+                                <span style="color:red;">Paid</span>
+                            @else
+                                <span style="color:green;">Free</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($exam->prices !=null)
+                                @php $exam_prices=json_decode($exam->prices); @endphp
+                                @foreach($exam_prices as $key=>$price)
+                                    <span>{{$key}} {{$price}},</span>
+                                @endforeach
+                            @else
+                                <span>Free</span>
+                            @endif
+                        </td>
                         <td>
                             <a href="#" class="addQuestion" data-id="{{$exam->id}}" data-toggle="modal" data-target="#addQnamModal">Add Question</a>
                         </td>
@@ -83,6 +102,14 @@
                         <input type="time" name="time" id="time" class="w-100" required>
                         <br><br>
                         <input type="number" name="attempt" id="attempt" required placeholder="Enter exam attempt time" class="w-100" min="1">
+                        <br><br>
+                        <select name="plan" id="plan" required class="w-100 mb-4 plan">
+                            <option value="">Select Plan</option>
+                            <option value="0">Free</option>
+                            <option value="1">Paid</option>
+                        </select>
+                        <input type="number" name="inr" placeholder="In Rupees" disabled>
+                        <input type="number" name="usd" id="usd" placeholder="In USD" disabled >
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -445,6 +472,26 @@
                         }
                     }
                 });
+
+           });
+
+           //plan js
+           $('.plan').change(function(){
+
+            var plan=$(this).val();
+            if (plan == 1) {
+                $(this).next().attr('required','required');
+                $(this).next().next().attr('required','required');
+
+                $(this).next().prop('disabled',false);
+                $(this).next().next().prop('disabled',false);
+            } else {
+                $(this).next().removeAttr('required','required');
+                $(this).next().next().removeAttr('required','required');
+
+                $(this).next().prop('disabled',true);
+                $(this).next().next().prop('disabled',true);
+            }
 
            });
         });

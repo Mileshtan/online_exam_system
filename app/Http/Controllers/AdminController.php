@@ -80,6 +80,11 @@ class AdminController extends Controller
     public function addExam(Request $request)
     {
         try {
+            $plan=$request->plan;
+            $prices=null;
+            if (isset($request->inr) && isset($request->usd)) {
+                $prices=json_encode(['INR'=>$request->inr,'USD'=>$request->usd]);
+            }
             $unique_id=uniqid('exid');
             Exam::insert([
                 'exam_name'=>$request->exam_name,
@@ -87,7 +92,9 @@ class AdminController extends Controller
                 'date'=>$request->date,
                 'time'=>$request->time,
                 'attempt'=>$request->attempt,
-                'entrance_id'=>$unique_id
+                'entrance_id'=>$unique_id,
+                'plan'=>$plan,
+                'prices'=>$prices
             ]);
             return response()->json(['success'=>true,'msg'=>'Exam added successfully']);
         } catch (\Exception $e) {
