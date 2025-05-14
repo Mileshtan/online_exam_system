@@ -1,6 +1,6 @@
 @extends('layout.student-layout')
 @section('space-work')
-    <h2>Free Exams</h2>
+    <h2>Paid Exams</h2>
     <table class="table">
         <thead>
             <th>#</th>
@@ -25,7 +25,10 @@
                         <td>{{$exam->time}} Hrs</td>
                         <td>{{$exam->attempt}} Time</td>
                         <td>{{$exam->attempt_counter}}</td>
-                        <td><a href="#" class="copy" data-code="{{$exam->entrance_id}}"><i class="fa fa-copy"></i></a></td>
+                        <td>
+                            <b><a href="#" style="color:red;">Buy Now</a></b>
+                            <!-- <a href="#" class="copy" data-code="{{$exam->entrance_id}}"><i class="fa fa-copy"></i></a> -->
+                        </td>
                     </tr>
                 @endforeach
             @else
