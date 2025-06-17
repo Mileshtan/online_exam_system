@@ -16,7 +16,9 @@
         <tbody>
             
             @if(count($attempts)>0)
-                @php $x=1; @endphp
+                @php 
+                    $x=1; 
+                @endphp
                 @foreach($attempts as $attempt)
                     <tr>
                         <td>{{$x++}}</td>

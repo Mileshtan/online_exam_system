@@ -17,9 +17,12 @@
         </thead>
         <tbody>
             @if(count($subjects)>0)
+                @php
+                    $x=1;
+                @endphp
                 @foreach($subjects as $subject)
                     <tr>
-                        <td>{{$subject->id}}</td>
+                        <td>{{$x ++}}</td>
                         <td>{{$subject->subject}}</td>
                         <td>
                             <button class="btn btn-info editButton" data-id="{{$subject->id}}" data-subject="{{$subject->subject}}" data-toggle="modal" data-target="#editSubjectModal">Edit</button>

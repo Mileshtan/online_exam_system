@@ -25,9 +25,12 @@
         </thead>
         <tbody>
            @if(count($exams)>0)
+                @php
+                    $x=1;
+                @endphp
                 @foreach($exams as $exam)
                     <tr>
-                        <td>{{$exam->id}}</td>
+                        <td>{{$x++}}</td>
                         <td>{{$exam->exam_name}}</td>
                         <td>{{$exam->subjects[0]['subject']}}</td>
                         <td>{{$exam->date}}</td>
@@ -196,8 +199,8 @@
 
 
      <!-- Add Qna Modal -->
-     <div class="modal fade" id="addQnamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="addQnamModal">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Add Question</h5>
@@ -233,6 +236,12 @@
             </div>
         </div>
     </div>
+
+
+
+
+
+
 
 
       <!-- View Qna Modal -->
@@ -390,44 +399,23 @@
 
            //Add question to exam
            $('.addQuestion').click(function(){
-                var id=$(this).attr('data-id');
-
+                var id = $(this).attr('data-id');
                 $("#addExamId").val(id);
 
                 $.ajax({
-                    url:"{{route('getQuestions')}}",
-                    type:"GET",
-                    data:{exam_id:id},
-                    success:function(data){
-                        if (data.success==true) {
-                            var questions=data.data;
-                            var html='';
-                            if (questions.length > 0) {
-                                for(let i=0;i<questions.length;i++)
-                                {
-                                    html +=`
-                                        <tr>
-                                            <td><input type="checkbox" value="`+questions[i]['id']+`" name="questions_ids[]"></td>
-                                            <td>`+questions[i]['questions']+`</td>
-                                        </tr>
-                                    `;
-                                }
-                            }
-                            else{
-                                html+=`
-                                    <tr>
-                                        <td colspan="2">Question not available</td>
-                                    </tr>
-                                `;
-                            }
-                            $('.addBody').html(html);
+                    url: "{{ route('getQuestions') }}",
+                    type: "GET",
+                    data: { exam_id: id },
+                    success: function(data){
+                        if (data.success == true) {
+                            $('.addBody').html(data.html);
                         } else {
                             alert(data.msg);
                         }
                     }
                 });
+            });
 
-           });
 
            $("#addQna").submit(function(e){ 
             // console.log("ok");
@@ -551,5 +539,26 @@
                 }
             }
         }
+        // Handle pagination inside modal
+        $(document).on('click', '.pagination a', function(e) {
+            e.preventDefault();
+
+            var pageUrl = $(this).attr('href');
+            var examId = $('#addExamId').val();
+
+            $.ajax({
+                url: pageUrl,
+                type: 'GET',
+                data: { exam_id: examId },
+                success: function(data) {
+                    if (data.success) {
+                        $('.addBody').html(data.html);
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        });
+
     </script>
 @endsection

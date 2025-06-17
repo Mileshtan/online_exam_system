@@ -21,9 +21,12 @@
         </thead>
         <tbody>
             @if(count($students)>0)
+                @php
+                    $x=1;
+                @endphp
                 @foreach($students as $student)
                 <tr>
-                    <th scope="row">{{$student->id}}</th>
+                    <th scope="row">{{$x++}}</th>
                     <td>{{$student->name}}</td>
                     <td>{{$student->email}}</td>
                     <td>

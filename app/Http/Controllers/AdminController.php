@@ -360,31 +360,70 @@ class AdminController extends Controller
     }
 
     //Get question in exam
-    public function getQuestions(Request $request){
-        try {
+    // public function getQuestions(Request $request){
+    //     try {
            
-            $questions=Question::all();
-            if (count($questions)>0) {
-                $data=[];
-                $counter=0;
-                foreach($questions as $question)
-                {
-                    $qnaExam=QnaExam::where(['exam_id'=>$request->exam_id,'question_id'=>$question->id])->get();
-                    if (count($qnaExam)==0) {
-                        $data[$counter]['id']=$question->id;
-                        $data[$counter]['questions']=$question->question;
-                        $counter++;
-                    }
-                }
-                return response()->json(['success'=>true,'msg'=>'Question data','data'=>$data]);
+    //         $questions=Question::paginate(5);
+    //         if (count($questions)>0) {
+    //             $data=[];
+    //             $counter=0;
+    //             foreach($questions as $question)
+    //             {
+    //                 $qnaExam=QnaExam::where(['exam_id'=>$request->exam_id,'question_id'=>$question->id])->get();
+    //                 if (count($qnaExam)==0) {
+    //                     $data[$counter]['id']=$question->id;
+    //                     $data[$counter]['questions']=$question->question;
+    //                     $counter++;
+    //                 }
+    //             }
+    //             return response()->json(['success'=>true,'msg'=>'Question data','data'=>$data]);
+    //         }
+    //         else {
+    //             return response()->json(['success'=>false,'msg'=>'Questions not found']);
+    //         }
+    //     } catch (\Exception $e) {
+    //         return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
+    //     }
+    // }
+
+
+
+    public function getQuestions(Request $request)
+    {
+        try {
+            $perPage = 10;
+
+            // First filter out already linked question IDs
+            $usedQuestionIds = QnaExam::where('exam_id', $request->exam_id)->pluck('question_id')->toArray();
+
+            // Now only get questions that are not used yet
+            $questions = Question::whereNotIn('id', $usedQuestionIds)
+                     ->latest() // same as ->orderBy('created_at', 'desc')
+                     ->paginate($perPage);
+
+            // Format the data for rendering
+            $data = [];
+            foreach ($questions as $question) {
+                $data[] = [
+                    'id' => $question->id,
+                    'questions' => $question->question,
+                ];
             }
-            else {
-                return response()->json(['success'=>false,'msg'=>'Questions not found']);
+
+            if ($request->ajax()) {
+                $html = view('admin.question-paginate', [
+                    'questions' => $data,
+                    'pagination' => $questions->appends(request()->except('page'))->links('pagination::bootstrap-4')->render(),
+                ])->render();
+
+                return response()->json(['success' => true, 'html' => $html]);
             }
         } catch (\Exception $e) {
-            return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
+            return response()->json(['success' => false, 'msg' => $e->getMessage()]);
         }
     }
+
+
 
     public function addQuestions(Request $request)
     {
