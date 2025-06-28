@@ -23,7 +23,7 @@
         <tbody>
             @if(count($questions)>0)
                 @php
-                    $x=1;
+                    $x = $questions->firstItem();
                 @endphp
                 @foreach($questions as $question)
                 <tr>
