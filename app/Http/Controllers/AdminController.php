@@ -154,7 +154,7 @@ class AdminController extends Controller
     //Q&A Dashboard
     public function qnaDashboard()
     {
-        $questions=Question::with('answers')->paginate(20);
+        $questions = Question::with('answers')->orderBy('created_at', 'desc')->paginate(20);
         return view('admin.qnaDashboard',compact('questions'));
     }
 

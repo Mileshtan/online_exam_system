@@ -284,13 +284,13 @@
 
         //Show Answer
         $(".ansButton").click(function(){
-            var questions=@json($questions);
+            
+            var questions = @json($questions->items());
             var qid=$(this).attr("data-id");
             var html='';
-
             for (let i = 0; i < questions.length; i++) {
+                
                 if (questions[i]['id'] == qid) {
-                    
                     var answersLength=questions[i]['answers'].length;
                     for (let j = 0; j < answersLength; j++) {
                         let is_correct='No';
