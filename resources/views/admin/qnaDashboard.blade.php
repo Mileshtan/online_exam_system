@@ -40,6 +40,7 @@
                     </td>
                 </tr>
                 @endforeach
+                
             @else
                 <tr>
                     <td colspan="3">Questions $ Answer not found</td>
@@ -47,6 +48,9 @@
             @endif
         </tbody>
     </table>
+    <div class="d-flex justify-content-center">
+        {{ $questions->links() }}
+    </div>
      <!-- Add Question and Answer Modal -->
      <div class="modal fade" id="addQnaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -76,7 +80,7 @@
                     <div class="modal-footer">
                         <span class="error" style="color:red;"></span>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Add Q&A</button>
+                        <button type="submit" class="btn btn-primary addQuestion">Add Q&A</button>
                     </div> 
                 </form>
                 
@@ -197,7 +201,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-info">Import File</button>
+                                <button type="submit" class="btn btn-info importFile">Import File</button>
                             </div>
                         </form>    
                     </div>
@@ -209,6 +213,7 @@
         //form submission
         $("#addQna").submit(function(e){
             e.preventDefault();
+            $('.addQuestion').prop('disabled',true);
             if ($(".answers").length < 2) {
                 $(".error").text("Please add mininum two answers.")
                 setTimeout(function(){
@@ -462,7 +467,7 @@
         //Import Q&a
         $('#importQna').submit(function(e){
             e.preventDefault();
-            
+            $('.importFile').prop('disabled',true);
             let formData = new FormData();
             formData.append("file",fileupload.files[0]);
 

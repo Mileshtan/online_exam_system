@@ -244,9 +244,9 @@
 
 
 
-      <!-- View Qna Modal -->
-      <div class="modal fade" id="seeQnamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+    <!-- View Qna Modal -->
+    <div class="modal fade bd-example-modal-lg" id="seeQnamModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Question</h5>
@@ -269,7 +269,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
- 
             </div>
         </div>
     </div>
