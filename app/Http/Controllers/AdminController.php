@@ -72,7 +72,7 @@ class AdminController extends Controller
     public function examDashboard()
     {
         $subjects=Subject::all();
-        $exams=Exam::with('subjects')->get();
+        $exams=Exam::with('subjects')->paginate(10);
         return view('admin.exam-dashboard',['subjects'=>$subjects,'exams'=>$exams]);
     }
 

@@ -26,7 +26,7 @@
         <tbody>
            @if(count($exams)>0)
                 @php
-                    $x=1;
+                    $x = $exams->firstItem();
                 @endphp
                 @foreach($exams as $exam)
                     <tr>
@@ -76,6 +76,9 @@
            @endif
         </tbody>
     </table>
+    <div class="d-flex justify-content-center">
+        {{ $exams->links() }}
+    </div>
      <!-- Add Exam Modal -->
      <div class="modal fade" id="addExamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -539,7 +542,7 @@
             }
         }
         // Handle pagination inside modal
-        $(document).on('click', '.pagination a', function(e) {
+        $(document).on('click', '#addQnamModal .pagination a', function(e) {
             e.preventDefault();
 
             var pageUrl = $(this).attr('href');
@@ -558,6 +561,7 @@
                 }
             });
         });
+
 
     </script>
 @endsection
