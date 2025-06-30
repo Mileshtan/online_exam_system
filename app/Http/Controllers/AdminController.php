@@ -278,7 +278,7 @@ class AdminController extends Controller
 
     //Student dashboard
     public function studentsDashboard(){
-        $students=User::where('is_admin',0)->get();
+        $students=User::where('is_admin',0)->latest()->paginate(10);
         return view('admin.studentsDashboard',compact('students'));
     }
 

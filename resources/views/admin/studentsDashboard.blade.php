@@ -22,7 +22,7 @@
         <tbody>
             @if(count($students)>0)
                 @php
-                    $x=1;
+                    $x = $students->firstItem();
                 @endphp
                 @foreach($students as $student)
                 <tr>
@@ -48,7 +48,9 @@
             @endif
         </tbody>
     </table>
-
+    <div class="d-flex justify-content-center">
+        {{ $students->links() }}
+    </div>
      <!-- Add Student Modal -->
      <div class="modal fade" id="addStudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
