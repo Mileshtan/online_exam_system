@@ -34,7 +34,7 @@
                         <td>{{$exam->exam_name}}</td>
                         <td>{{$exam->subjects[0]['subject']}}</td>
                         <td>{{$exam->date}}</td>
-                        <td>{{$exam->time}} Hrs</td>
+                        <td>{{$exam->time}} Min</td>
                         <td>{{$exam->attempt}} Time</td>
                         <td>
                             @if($exam->plan !=0)
