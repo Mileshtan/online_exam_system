@@ -97,7 +97,7 @@ class AuthController extends Controller
 
     public function adminDashboard()
     {
-        $subjects=Subject::all();
+        $subjects = Subject::latest()->paginate(10);
         return view('admin.dashboard',compact('subjects'));
     }
 

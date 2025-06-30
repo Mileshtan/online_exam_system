@@ -18,7 +18,7 @@
         <tbody>
             @if(count($subjects)>0)
                 @php
-                    $x=1;
+                    $x = $subjects->firstItem();
                 @endphp
                 @foreach($subjects as $subject)
                     <tr>
@@ -39,6 +39,9 @@
             @endif
         </tbody>
     </table>
+     <div class="d-flex justify-content-center">
+        {{ $subjects->links() }}
+    </div>
     <!-- Add Subject Modal -->
     <div class="modal fade" id="addSubjectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
