@@ -470,7 +470,7 @@ class AdminController extends Controller
 
     public function loadMarks()
     {
-        $exams=Exam::with('getQnaExam')->get();
+        $exams=Exam::with('getQnaExam')->latest()->paginate(10);
         return view('admin.marksDashboard',compact('exams'));
     }
 

@@ -16,7 +16,7 @@
         <tbody>
            @if(count($exams)>0)
                 @php
-                    $x=1;
+                    $x = $exams->firstItem();
                 @endphp
                 @foreach($exams as $exam)
                     <tr>
@@ -37,7 +37,9 @@
            @endif
         </tbody>
     </table>
-
+    <div class="d-flex justify-content-center">
+        {{ $exams->links() }}
+    </div>
 
 
        <!-- Edit Marks Modal -->
