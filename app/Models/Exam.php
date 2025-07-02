@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ExamAttempt;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class Exam extends Model
 {
-    use HasFactory;
+    use HasFactory,Sluggable;
     protected $fillable=[
         'exam_name',
         'subject_id',
@@ -44,5 +45,14 @@ class Exam extends Model
 
     public function getAttemptCounterAttribute(){
         return $this->count;
+    }
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'exam_name'
+            ]
+        ];
     }
 }

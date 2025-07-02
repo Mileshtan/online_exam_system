@@ -94,6 +94,8 @@
                     <div class="modal-body">
                         <input type="text" name="exam_name" id="exam_name" placeholder="Enter Exam Name" class="w-100" required>
                         <br><br>
+                        <input type="text" name="slug" id="slug" placeholder="Slug" class="w-100" required>
+                        <br><br>
                         <select name="subject_id" id="subject_id" class="w-100" required>
                             <option value="">Select Subject</option>
                             @if(count($subjects)>0)
@@ -142,6 +144,8 @@
                         <input type="hidden" name="exam_id" id="exam_id">
                         <input type="text" name="exam_name" id="edit_exam_name" placeholder="Enter Exam Name" class="w-100" required>
                         <br><br>
+                        <input type="text" name="edit_slug" id="edit_slug" placeholder="Slug" class="w-100" required>
+                        <br><br>
                         <select name="subject_id" id="edit_subject_id" class="w-100" required>
                             <option value="">Select Subject</option>
                             @if(count($subjects)>0)
@@ -153,7 +157,7 @@
                         <br><br>
                         <input type="date" name="date" id="edit_date" class="w-100" required min="@php echo date('Y-m-d'); @endphp">
                         <br><br>
-                        <input type="time" name="time" id="edit_time" class="w-100" required>
+                        <input type="text" name="time" id="edit_time" class="w-100" required>
                         <br><br>
                         <input type="number" name="attempt" id="edit_attempt" required placeholder="Enter exam attempt time" class="w-100" min="1">
                         <br><br>
@@ -317,6 +321,7 @@
 
                             var exam=data.data;
                             $("#edit_exam_name").val(exam[0].exam_name);
+                            $("#edit_slug").val(exam[0].slug);
                             $("#edit_subject_id").val(exam[0].subject_id);
                             $("#edit_date").val(exam[0].date);
                             $("#edit_time").val(exam[0].time);
@@ -557,6 +562,25 @@
                         $('.addBody').html(data.html);
                     } else {
                         alert(data.msg);
+                    }
+                }
+            });
+        });
+
+
+        //Slug Generate
+        $("#exam_name, #edit_exam_name").change(function() {
+            let inputId = $(this).attr('id');
+            $.ajax({
+                url: '{{ route("getExamSlug") }}',
+                type: 'get',
+                data: { exam_name: $(this).val() },
+                dataType: 'json',
+                success: function(response) {
+                    if (inputId === "exam_name") {
+                        $("#slug").val(response.slug);
+                    } else if (inputId === "edit_exam_name") {
+                        $("#edit_slug").val(response.slug);
                     }
                 }
             });

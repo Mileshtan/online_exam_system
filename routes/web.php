@@ -59,6 +59,9 @@ Route::group(['middleware'=>['web','checkAdmin']],function(){
     Route::get('/get-exam-details/{id}',[AdminController::class,'getExamDetail'])->name('getExamDetail'); 
     Route::post('/update-exam',[AdminController::class,'updateExam'])->name('updateExam'); 
     Route::post('/delete-exam',[AdminController::class,'deleteExam'])->name('deleteExam'); 
+
+    //Slug
+    Route::get('/exam/getSlug',[AdminController::class,'getSlug'])->name('getExamSlug');
     
 
     //Q&A

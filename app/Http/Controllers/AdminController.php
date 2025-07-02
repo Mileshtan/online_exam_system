@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
+use Cviebrock\EloquentSluggable\Services\SlugService;
 
 class AdminController extends Controller
 {
@@ -88,6 +89,7 @@ class AdminController extends Controller
             $unique_id=uniqid('exid');
             Exam::insert([
                 'exam_name'=>$request->exam_name,
+                'slug'=>$request->slug,
                 'subject_id'=>$request->subject_id,
                 'date'=>$request->date,
                 'time'=>$request->time,
@@ -126,6 +128,7 @@ class AdminController extends Controller
             }
             $exam=Exam::find($request->exam_id);
             $exam->exam_name=$request->exam_name;
+            $exam->slug=$request->edit_slug;
             $exam->subject_id=$request->subject_id;
             $exam->date=$request->date;
             $exam->time=$request->time;
@@ -554,6 +557,17 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success'=>false,'msg'=>$e->getMessage()]);
         }
+    }
+
+
+    //Slug
+    public function getSlug(Request $request)
+    {
+        $slug = SlugService::createSlug(Exam::class, 'slug', $request->exam_name);
+        return response()->json([
+            'status'=>true,
+            'slug'=>$slug
+        ]);
     }
 
     
