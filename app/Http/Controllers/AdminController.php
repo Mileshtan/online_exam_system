@@ -73,7 +73,7 @@ class AdminController extends Controller
     public function examDashboard()
     {
         $subjects=Subject::all();
-        $exams=Exam::with('subjects')->paginate(10);
+        $exams=Exam::with('subjects')->latest()->paginate(10);
         return view('admin.exam-dashboard',['subjects'=>$subjects,'exams'=>$exams]);
     }
 
@@ -483,7 +483,8 @@ class AdminController extends Controller
             
             Exam::where('id',$request->exam_id)->update([
                 'marks'=>$request->marks,
-                'pass_marks'=>$request->pass_marks
+                'pass_marks'=>$request->pass_marks,
+                'negative_marks'=>$request->negative_marks
             ]);
             return response()->json(['success'=>true,'msg'=>'Marks Updated']);
 

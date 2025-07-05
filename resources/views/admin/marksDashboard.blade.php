@@ -10,6 +10,7 @@
                 <th scope="col">Marks/Q</th>
                 <th scope="col">Total Marks</th> 
                 <th scope="col">Passing Marks</th>
+                <th scope="col">Negative Marks(%)</th>
                 <th scope="col">Edit</th>
             </tr>
         </thead>
@@ -25,8 +26,9 @@
                         <td>{{$exam->marks}}</td>
                         <td>{{count($exam->getQnaExam) * $exam->marks}}</td>
                         <td>{{$exam->pass_marks}}</td>
+                        <td>{{$exam->negative_marks ?? '-'}}</td>
                         <td>
-                            <button class="btn btn-primary editMarks" data-toggle="modal" data-target="#editMarksModal" data-id="{{$exam->id}}" data-marks="{{$exam->marks}}" data-totalq="{{count($exam->getQnaExam)}}" data-pass-marks="{{$exam->pass_marks}}">Edit</button>
+                            <button class="btn btn-primary editMarks" data-toggle="modal" data-target="#editMarksModal" data-id="{{$exam->id}}" data-marks="{{$exam->marks}}" data-totalq="{{count($exam->getQnaExam)}}" data-pass-marks="{{$exam->pass_marks}}" data-negative-marks="{{$exam->negative_marks}}">Edit</button>
                         </td>
                     </tr>
                 @endforeach
@@ -83,6 +85,15 @@
                                 <input type="text" onkeypress="return event.charCode>=48 && event.charCode<=57 ||event.charCode ==46" name="pass_marks" id="pass_marks" placeholder="Enter Pass Marks per Question">
                             </div>
                         </div>
+
+                        <div class="row mt-2">
+                            <div class="col-sm-4">
+                                <label for="">Negative Marks(%)</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" onkeypress="return event.charCode>=48 && event.charCode<=57 ||event.charCode ==46" name="negative_marks" id="negative_marks" placeholder="Enter negative marks">
+                            </div>
+                        </div>
                        
                     </div>
                     <div class="modal-footer">
@@ -104,10 +115,12 @@
                 var examId=$(this).attr('data-id');
                 var examMarks=$(this).attr('data-marks');
                 var totalQ=$(this).attr('data-totalq');
+                var negativeMarks=$(this).attr('data-negative-marks');
 
                 $('#exam_id').val(examId);
                 $('#marks').val(examMarks);
                 $('#tmarks').val((examMarks * totalQ).toFixed(1));
+                $('#negative_marks').val(negativeMarks);
 
                 totalQna=totalQ;
 
@@ -139,6 +152,7 @@
                 $('.pass-error').remove();
                 var tmarks=$('#tmarks').val();
                 var pmarks=$('#pass_marks').val();
+                var negativemarks=$('#negative_marks').val();
 
                 if (parseFloat(pmarks) >= parseFloat(tmarks)) {
                     $('#pass_marks').parent().append('<p style="color:red;" class="pass-error">Pass Marks cannot be greater than total marks!</p>');
